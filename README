@@ -1,0 +1,5 @@
+This project shows one way of getting an OAuth token from Foursquare via BlackBerry embedded browser field2. 
+
+This flow applies to BlackBerry OS 5.0+.
+
+For more reference, https://developer.foursquare.com/docs/oauth.html
