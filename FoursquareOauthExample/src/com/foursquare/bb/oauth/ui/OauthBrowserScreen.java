@@ -14,14 +14,9 @@ import net.rim.device.api.io.transport.TransportInfo;
 import net.rim.device.api.system.Display;
 import net.rim.device.api.ui.Color;
 import net.rim.device.api.ui.Field;
-import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
-import net.rim.device.api.ui.component.Dialog;
-import net.rim.device.api.ui.component.LabelField;
-import net.rim.device.api.ui.container.HorizontalFieldManager;
 import net.rim.device.api.ui.container.MainScreen;
-import net.rim.device.api.ui.container.VerticalFieldManager;
 import net.rim.device.api.ui.decor.BackgroundFactory;
 
 import org.w3c.dom.Document;
@@ -30,15 +25,10 @@ import com.foursquare.bb.oauth.Log4Device;
 import com.foursquare.bb.oauth.OauthTokenChangeListener;
 
 /**
- * 
- * 
- * @author Jeff Hu
- *
+ * Browser screen contains BrowserField2 (available 5.0+). We use it to capture an OAuth token.
+ * @author Jeff Hu (jeff4sq@gmail.com)
  */
 public class OauthBrowserScreen extends MainScreen {
-	
-	protected int[] preferredTransportTypes = { TransportInfo.TRANSPORT_TCP_WIFI, TransportInfo.TRANSPORT_TCP_CELLULAR, TransportInfo.TRANSPORT_WAP2 };
-	protected int[] disallowedTransportTypes = { TransportInfo.TRANSPORT_BIS_B, TransportInfo.TRANSPORT_MDS, TransportInfo.TRANSPORT_WAP };
 	
 	private String                 mUrl;
 	private BrowserFieldConfig     mConfig;
@@ -67,7 +57,7 @@ public class OauthBrowserScreen extends MainScreen {
 	
 	private void buildUI() {
 		getMainManager().setBackground(BackgroundFactory.createSolidBackground(Color.WHITE));
-
+		
 		mLoadingField = new AnimationLabelField(mLoadingText);
 		add(mLoadingField);
 	}
@@ -81,8 +71,8 @@ public class OauthBrowserScreen extends MainScreen {
 		mConfig.setProperty(BrowserFieldConfig.VIEWPORT_WIDTH, new Integer(Display.getWidth()));
 		
 		ConnectionFactory conn = new ConnectionFactory();
-		conn.setPreferredTransportTypes(preferredTransportTypes);
-		conn.setDisallowedTransportTypes(disallowedTransportTypes);
+		conn.setPreferredTransportTypes(getPreferredTransportTypes());
+		conn.setDisallowedTransportTypes(getDisallowedTransportTypes());
 		mConfig.setProperty(BrowserFieldConfig.CONNECTION_FACTORY, conn);
 		
 		BrowserFieldListener bfListener = new BrowserFieldListener() {
@@ -138,12 +128,24 @@ public class OauthBrowserScreen extends MainScreen {
 		return false;
 	}
 	
+	protected int[] getPreferredTransportTypes() {
+		return new int []{ TransportInfo.TRANSPORT_TCP_WIFI, TransportInfo.TRANSPORT_TCP_CELLULAR, TransportInfo.TRANSPORT_WAP2 };
+	}
+	
+	protected int[] getDisallowedTransportTypes() {
+		return new int[] { TransportInfo.TRANSPORT_BIS_B, TransportInfo.TRANSPORT_MDS, TransportInfo.TRANSPORT_WAP };
+	}
+	
+	/**
+	 * Check if it still needs to fetch content
+	 * @param url
+	 * @return true if an oauth token is not there; otherwise, false
+	 */
 	private boolean shouldFetchContent(String url) {
 		String token = getOAuthToken(url);
-		boolean ret = false;
-		if (token == null || token.trim().length() == 0) {
-			ret = true;
-		} else {
+		boolean ret = (token == null || token.trim().length() == 0);
+		if (!ret) {
+			// we found a token!
 			Screen active = UiApplication.getUiApplication().getActiveScreen();
 			if (active instanceof OauthBrowserScreen && active.isDisplayed()) {
 				// dismiss browser screen, show OAuth Token
@@ -154,11 +156,15 @@ public class OauthBrowserScreen extends MainScreen {
 			if (mTokenListener != null) {
 				mTokenListener.tokenChanged(token);
 			}
-			ret = false;
 		}
 		return ret;
 	}
 	
+	/**
+	 * Substract the oauth token from the url
+	 * @param url
+	 * @return a valid oauth token; otherwise null
+	 */
 	private String getOAuthToken(String url) {
 		String token = null;
 		if (url != null && url.trim().length() != 0) {

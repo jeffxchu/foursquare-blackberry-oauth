@@ -10,11 +10,9 @@ import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 
 /**
- * 
- * A simple connect to foursquare button
+ * A simple 'connect to foursquare' button
  * 
  * @author Jeff Hu (jeff4sq@gmail.com)
- *
  */
 public class ConnectButton extends Field {
 

@@ -18,59 +18,52 @@ import net.rim.device.api.ui.container.VerticalFieldManager;
 import com.foursquare.bb.oauth.OauthTokenChangeListener;
 
 /**
- * 
- * 
+ * Display screen
  * @author Jeff Hu (jeff4sq@gmail.com)
- *
  */
 public class OauthDisplayScreen extends MainScreen implements FieldChangeListener, OauthTokenChangeListener {
 	
-	/*
-	 * Default client id for testing purpose
-	 * Your can grab your application client id at https://foursquare.com/oauth/register 
-	 */
-	public static final String TEST_CLIENT_ID    = "CTHTLACET0NMF4BKB1KHXY11BNWVJZ0UIGQFKXW4LWPJ3LXE";
-	
-	/*
-	 * Default callback (redirect) url for testing purpose. 
-	 * This should be your application url.
-	 */
-	public static final String TEST_CALLBACK_URL = "http://www.google.com";
-	
-	private Manager mLayout;
-	
-	private EditField mClientIdEditField;
-	private EditField mCallbackEditField;
-	private EditField mOauthUrlField;
-	private ButtonField mCreateButton;
-	private ButtonField mClearButton;
-	private Field mConnectButton;
+	private String        mClientId;
+	private String        mCallbackUrl;
+	private Manager       mLayout;
+	private EditField     mClientIdEditField;
+	private EditField     mCallbackEditField;
+	private EditField     mOauthUrlField;
+	private ButtonField   mCreateButton;
+	private ButtonField   mClearButton;
+	private Field         mConnectButton;
 	private CheckboxField mDebugCheckbox;
 
-	public OauthDisplayScreen() {
-		this(TEST_CLIENT_ID, TEST_CALLBACK_URL);
-	}
-	
 	public OauthDisplayScreen(String clientId, String callbackUrl) {
 		super(USE_ALL_WIDTH|USE_ALL_HEIGHT|NO_VERTICAL_SCROLL|NO_HORIZONTAL_SCROLL);
 		setTitle("Foursquare Oauth2 Demo App");
+		
+		mClientId    = clientId;
+		mCallbackUrl = callbackUrl;
+		
+		buildUI();
+	}
+	
+	private void buildUI() {
 		mLayout = new VerticalFieldManager(VERTICAL_SCROLL|VERTICAL_SCROLLBAR);
-				
+		
 		// Client id
-		mClientIdEditField = new OauthEditField("", clientId);
+		mClientIdEditField = new OauthEditField("", mClientId);
 		mClientIdEditField.setChangeListener(this);
 		Manager clientIdManager = createSectionManager("Edit Client Id", mClientIdEditField);
 		mLayout.add(clientIdManager);
 		
 		// Callback url
-		mCallbackEditField = new OauthEditField("", callbackUrl);
+		mCallbackEditField = new OauthEditField("", mCallbackUrl);
 		mCallbackEditField.setChangeListener(this);
 		Manager callbackManager = createSectionManager("Edit Callback Site", mCallbackEditField);
 		mLayout.add(callbackManager);
 		
-		// 
+		// Create request url button
 		mCreateButton = new ButtonField("Create", ButtonField.HCENTER);		
 		mCreateButton.setChangeListener(this);
+		
+		// Clear button to clear all editable fields
 		mClearButton = new ButtonField("Clear", ButtonField.HCENTER);
 		mClearButton.setChangeListener(this);
 		Manager ffm = new FlowFieldManager(Manager.USE_ALL_WIDTH | Field.FIELD_HCENTER);
@@ -78,6 +71,7 @@ public class OauthDisplayScreen extends MainScreen implements FieldChangeListene
 		ffm.add(mClearButton);
 		mLayout.add(ffm);
 		
+		// full oauth2 request url display field
 		mOauthUrlField = new OauthEditField("", "", EditField.NON_FOCUSABLE|EditField.READONLY) {
 			public void paint(Graphics graphics) {
 				int oldColor = graphics.getColor();
@@ -93,6 +87,7 @@ public class OauthDisplayScreen extends MainScreen implements FieldChangeListene
 		mDebugCheckbox.setPadding(5, 8, 5, 8);
 		mLayout.add(mDebugCheckbox);
 		
+		// Connect to foursquare button
 		mConnectButton = new ConnectButton(0L);
 		mConnectButton.setChangeListener(this);
 		Manager ffm2 = new FlowFieldManager(Manager.USE_ALL_WIDTH | Field.FIELD_HCENTER);
@@ -135,7 +130,8 @@ public class OauthDisplayScreen extends MainScreen implements FieldChangeListene
 			mOauthUrlField.setText("");
 			invalidate();
 		}
-		else if (field == mConnectButton) {		
+		else if (field == mConnectButton) {
+			// push browser screen
 			OauthBrowserScreen screen = new OauthBrowserScreen(getOauth2AuthenticateUrl());
 			screen.setOauthListener(this);
 			UiApplication.getUiApplication().pushScreen(screen);
@@ -145,10 +141,12 @@ public class OauthDisplayScreen extends MainScreen implements FieldChangeListene
 	/*
 	 * (non-Javadoc)
 	 * @see com.foursquare.bb.oauth.OauthTokenChangeListener#tokenChanged(java.lang.String)
+	 * 
+	 * Once the oauth token is found, we simply show it.
 	 */
 	public void tokenChanged(String token) {
 		synchronized(UiApplication.getEventLock()) {
-			String message = "OAuth Token: " + token;
+			String message = "OAuth Token found! {" + token + "}";
 			Dialog.alert(message);
 		}
 	}

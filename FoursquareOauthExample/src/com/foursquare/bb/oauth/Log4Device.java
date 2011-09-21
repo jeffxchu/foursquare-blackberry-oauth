@@ -1,7 +1,6 @@
 package com.foursquare.bb.oauth;
 
 import java.io.UnsupportedEncodingException;
-
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.EventLogger;
 import net.rim.device.api.util.StringUtilities;
@@ -10,11 +9,10 @@ import net.rim.device.api.util.StringUtilities;
  * Event logger for the sample app
  * 
  * @author Jeff Hu (jeff4sq@gmail.com)
- *
  */
 public class Log4Device {
 
-	private static long GUID;
+	private static long GUID = 0L;
 	
 	private static final String APPNAME = "4sqOauth[3party]";
 	
@@ -28,11 +26,7 @@ public class Log4Device {
 	}
 	
 	private Log4Device() { /* make class singleton */ }
-	
-	/**
-	 * 
-	 * @param message
-	 */
+
 	public static void log(String message) {
 		byte[] data = message.getBytes();
 		if (DeviceInfo.isSimulator()) {

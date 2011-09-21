@@ -11,7 +11,7 @@ import net.rim.device.api.ui.container.HorizontalFieldManager;
 import net.rim.device.api.ui.container.VerticalFieldManager;
 
 /**
- * Progress animation label field
+ * Progress animation label field for loading embedded browser page
  * 
  * @author Jeff Hu (jeff4sq@gmail.com)
  *
@@ -64,65 +64,65 @@ public class AnimationLabelField extends VerticalFieldManager {
 	protected Bitmap getAnimationImage() {
 		return Bitmap.getBitmapResource("progress.png");
 	}
-	
-	 protected void applyTheme(Graphics graphics, boolean arg) {
-		 // do nothing
-	 }
+		
+	protected void applyTheme(Graphics graphics, boolean arg) {
+		// do nothing
+	}
 	 
-	 protected Field createAnimatedImageField(Bitmap image) {     
-		 return new AnimatedImageField(image, NON_FOCUSABLE|FIELD_VCENTER|FIELD_HCENTER);
-	 }
+	protected Field createAnimatedImageField(Bitmap image) {     
+		return new AnimatedImageField(image, NON_FOCUSABLE|FIELD_VCENTER|FIELD_HCENTER);
+	}
 	 
-	 public void updateText(String text) {
-		 mLabelField.setText(text);
-	 }
+	public void updateText(String text) {
+		mLabelField.setText(text);
+	}
 	 
-	 private static class AnimatedImageField extends Field implements Runnable {
-		 private Bitmap mImage;
-		 private int mCurrentFrame = 0;
-		 private int mInvokeId     = -1;
-		 private int mFrameWidth;
-		 private int mFrameHeight;
-		 private int mFrames;
+	private static class AnimatedImageField extends Field implements Runnable {
+		private Bitmap mImage;
+		private int mCurrentFrame = 0;
+		private int mInvokeId     = -1;
+		private int mFrameWidth;
+		private int mFrameHeight;
+		private int mFrames;
 		 
-		 public AnimatedImageField(Bitmap image, long style) {
-			 super(style | Field.NON_FOCUSABLE);
-			 mImage = image;
-			 mFrameHeight = mFrameWidth = mImage.getHeight();
-			 mFrames = mImage.getWidth() / mFrameHeight;
-		 }
+		public AnimatedImageField(Bitmap image, long style) {
+			super(style | Field.NON_FOCUSABLE);
+			mImage = image;
+			mFrameHeight = mFrameWidth = mImage.getHeight();
+			mFrames = mImage.getWidth() / mFrameHeight;
+		}
 		 
-		 public void run() {
-			 if (isVisible()) {
-				 invalidate();
-			 }
-		 }
+		public void run() {
+			if (isVisible()) {
+				invalidate();
+			}
+		}
 		 
-		 protected void onDisplay() {
-			 super.onDisplay();
-			 if (mInvokeId == -1) {
-				 mInvokeId = UiApplication.getUiApplication().invokeLater(this, 275, true);
-			 }
-		 }
+		protected void onDisplay() {
+			super.onDisplay();
+			if (mInvokeId == -1) {
+				mInvokeId = UiApplication.getUiApplication().invokeLater(this, 275, true);
+			}
+		}
 		 
-		 protected void onUndisplay() {
-			 super.onUndisplay();
-			 if (mInvokeId != -1) {
-				 UiApplication.getUiApplication().cancelInvokeLater(mInvokeId);
-				 mInvokeId = -1;
-			 }
-		 }
+		protected void onUndisplay() {
+			super.onUndisplay();
+			if (mInvokeId != -1) {
+				UiApplication.getUiApplication().cancelInvokeLater(mInvokeId);
+				mInvokeId = -1;
+			}
+		}
 		 
-		 protected void layout(int width, int height) {
-			 setExtent(Math.min(width, mFrameWidth), Math.min(height, mFrameHeight));
-		 }
+		protected void layout(int width, int height) {
+			setExtent(Math.min(width, mFrameWidth), Math.min(height, mFrameHeight));
+		}
 		 
-		 protected void paint(Graphics graphics) {
-			 graphics.drawBitmap(0, 0, mFrameWidth, mFrameHeight, mImage, mFrameWidth * mCurrentFrame, 0);
-			 ++mCurrentFrame;
-			 if (mCurrentFrame >= mFrames) {
-				 mCurrentFrame = 0;
-			 }
-		 }
-	 } // Class AnimatedImageField
+		protected void paint(Graphics graphics) {
+			graphics.drawBitmap(0, 0, mFrameWidth, mFrameHeight, mImage, mFrameWidth * mCurrentFrame, 0);
+			++mCurrentFrame;
+			if (mCurrentFrame >= mFrames) {
+				mCurrentFrame = 0;
+			}	
+		}
+	} // Class AnimatedImageField
 } // Class AnimationLabelField

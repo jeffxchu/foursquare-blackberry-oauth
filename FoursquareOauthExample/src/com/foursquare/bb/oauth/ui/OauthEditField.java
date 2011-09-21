@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.foursquare.bb.oauth.ui;
 
 import net.rim.device.api.ui.Color;
@@ -8,9 +5,8 @@ import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.component.EditField;
 
 /**
- * 
- * @author Jeff Hu (jeff4sq@foursquare.com)
- *
+ * Simple customized edit field
+ * @author Jeff Hu (jeff4sq@gmail.com)
  */
 public class OauthEditField extends EditField {
 	
