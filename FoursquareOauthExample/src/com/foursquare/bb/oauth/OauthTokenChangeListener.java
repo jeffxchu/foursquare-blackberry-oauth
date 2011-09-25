@@ -6,7 +6,7 @@ package com.foursquare.bb.oauth;
  * @author Jeff Hu (jeff4sq@gmail.com)
  */
 public interface OauthTokenChangeListener {
-	
-	public void tokenChanged(String token);
-	
+        
+    public void tokenChanged(String token);
+        
 }
