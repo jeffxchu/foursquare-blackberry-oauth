@@ -1,0 +1,64 @@
+## RIM Java Development Environment
+# RIM Project file
+#
+# This file is generated and managed by BlackBerry developer tools.
+# It SHOULD NOT BE modified manually.
+#
+AddOn=0
+AlwaysBuild=1
+[AlxImports
+]
+AutoRestart=0
+[ClassProtection
+]
+[CustomBuildFiles
+]
+[CustomBuildRules
+]
+[DefFiles
+]
+[DependsOn
+]
+Description=Foursquare OAuth2 Flow Example
+ExcludeFromBuildAll=0
+Exported=0
+[Files
+res\img\app_icon.png
+res\img\connect_to_fs_blue.png
+res\img\connect_to_fs_white.png
+res\img\progress.png
+src\com\foursquare\bb\oauth\FoursquareOauthApp.java
+src\com\foursquare\bb\oauth\Log4Device.java
+src\com\foursquare\bb\oauth\OauthTokenChangeListener.java
+src\com\foursquare\bb\oauth\ui\AnimationLabelField.java
+src\com\foursquare\bb\oauth\ui\ConnectButton.java
+src\com\foursquare\bb\oauth\ui\OauthBrowserScreen.java
+src\com\foursquare\bb\oauth\ui\OauthDisplayScreen.java
+src\com\foursquare\bb\oauth\ui\OauthEditField.java
+]
+HaveAlxImports=0
+HaveDefs=0
+HaveImports=0
+[Icons
+res\img\app_icon.png
+]
+[ImplicitRules
+]
+[Imports
+]
+Listing=0
+Options=-quiet 
+OutputFileName=foursquareOauthExample
+[PackageProtection
+]
+RibbonPosition=0
+[RolloverIcons
+]
+RunOnStartup=0
+SkipCompile=0
+StartupTier=7
+SystemModule=0
+Title=foursquareOauthDemo
+Type=0
+Vendor=foursquare
+Version=1.0.2
